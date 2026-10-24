@@ -1,5 +1,5 @@
 """
-Report Generator for CrowdWisdomTrading Quant Assessment.
+Report Generator for CrowdWisdomTrading Quant System.
 Generates:
 1. 1-Page Current Sentiment Outlook Summary (using Tavily news + X social metrics)
 2. Comprehensive Quantitative Evaluation Report (Sharpe, Sortino, Max Drawdown, IC)
@@ -99,7 +99,7 @@ The following macro headlines complement the real-time social sentiment data:
 - **Key Invalidation Level:** A drop in social engagement below the 24h baseline or a sharp reversal in sentiment momentum (delta_S < -0.05) will invalidate this outlook.
 
 ---
-*Confidential — Prepared for CrowdWisdomTrading Quant Team by Quantitative Candidate.*
+*CrowdWisdomTrading Quantitative Sentiment & Market Outlook.*
 """
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(content)
@@ -115,7 +115,7 @@ The following macro headlines complement the real-time social sentiment data:
         output_file: str = "reports/model_evaluation_report.md"
     ) -> str:
         """
-        Generates the formal Quantitative Position Assessment Evaluation Report
+        Generates the formal Quantitative Model Evaluation Report
         detailing model performance metrics (Sharpe, Sortino, Max Drawdown).
         """
         logger.info(f"Generating Formal Model Evaluation Report at {output_file}...")
@@ -135,13 +135,12 @@ The following macro headlines complement the real-time social sentiment data:
                 samples = v["test_samples"]
                 horizon_rows += f"| **{h_name}** | {hit} | {ic} | {rmse} | {mae} | {samples} |\n"
 
-        content = f"""# Quantitative Assessment Report: X Sentiment & Price Multi-Horizon Prediction
+        content = f"""# Quantitative Model Evaluation Report: X Sentiment & Price Multi-Horizon Prediction
 
-**Candidate:** Quantitative Data Scientist Applicant  
-**Company:** CrowdWisdomTrading  
+**Project:** CrowdWisdomTrading Quantitative Pipeline  
 **Target Asset:** {asset_symbol} (180-Day Hourly Horizon)  
 **Evaluation Scope:** Out-of-Sample Walk-Forward Validation ($n+0$ to $n+5$)  
-**Reviewer:** Gilad, CEO — CrowdWisdomTrading  
+**Constraint:** Strict X (Twitter) Sentiment & Price Features Only  
 
 ---
 
@@ -230,7 +229,7 @@ cp .env.example .env
 - **Primary Actor:** `apidojo/tweet-scraper`
 - **Alternative Actors Supported:** `vdrmmr/twitter-scraper`, `quacker/twitter-scraper`
 - **Tavily News API:** Search depth: `advanced`, topic: `news`
-- **Offline / Sandbox Mode:** Verified historical generator matching Kaggle/HuggingFace dataset schemas (from Gilad's doc) runs automatically if API credits are zero.
+- **Offline / Sandbox Mode:** Verified historical generator matching benchmark Kaggle/HuggingFace financial tweet dataset schemas runs automatically if API credits are zero.
 
 ```bash
 # 4. Execute End-to-End Orchestrator
@@ -238,7 +237,7 @@ python run_pipeline.py --asset BTC-USD --lookback 180 --timeframe 1h
 ```
 
 ---
-*Submitted for the Quantitative Data Scientist Position Assessment at CrowdWisdomTrading.*
+*CrowdWisdomTrading Quantitative Multi-Horizon Prediction & Risk Analysis Report.*
 """
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(content)

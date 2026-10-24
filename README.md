@@ -5,10 +5,8 @@
 [![Database: DuckDB](https://img.shields.io/badge/DuckDB-Embedded%20OLAP-yellow.svg)](https://duckdb.org/)
 [![Model: LightGBM](https://img.shields.io/badge/Model-Multi--Horizon%20LightGBM-orange.svg)](https://lightgbm.readthedocs.io/)
 
-> **Quantitative Data Scientist Position Assessment**  
-> **Prepared for:** Gilad, CEO — CrowdWisdomTrading ([gilad@crowdwisdomtrading.com](mailto:gilad@crowdwisdomtrading.com))  
 > **Target Asset:** Bitcoin (`BTC-USD`) & Equities (`TSLA`) | **Horizon:** 180 Days Hourly Bars  
-> **Core Objective:** Multi-horizon forecasting ($n+0, n+1, n+2, n+3, n+4, n+5$) strictly using **X (Twitter) Sentiment and Price Only**, joined in a relational database, and validated through purged out-of-sample walk-forward cross-validation.
+> **Core Objective:** Multi-horizon price forecasting ($n+0, n+1, n+2, n+3, n+4, n+5$) strictly using **X (Twitter) Sentiment and Price Only**, integrated via an embedded analytical database, and validated through purged out-of-sample walk-forward cross-validation.
 
 ---
 
@@ -97,7 +95,7 @@ Evaluated using **Purged Walk-Forward Cross-Validation** with a 6-bar embargo to
 
 ## 4. Feature Engineering (Strictly Sentiment & Price Only)
 
-In strict accordance with assessment requirements, all 55 quantitative features are derived **only from sentiment and price**:
+All 55 quantitative features are derived strictly **from sentiment and price only**:
 
 1. **Logarithmic Engagement-Weighted Sentiment ($\bar{S}_t$)**:
    $$w_i = \ln\left(1 + \text{likes}_i + 2\cdot\text{retweets}_i + 0.1\cdot\text{views}_i\right) \times \ln\left(10 + \text{followers}_i\right)$$
@@ -152,7 +150,7 @@ TAVILY_API_KEY=your_tavily_api_key_here
 EXA_API_KEY=your_exa_api_key_here
 ```
 
-> **Note on Offline / Sandbox Mode:** If no Apify token is provided or if credits expire, the system automatically uses a verified 180-day historical corpus generator matching the Kaggle/HuggingFace dataset schema specified in Gilad's documentation. The pipeline runs seamlessly out of the box!
+> **Note on Offline / Sandbox Mode:** If no Apify token is provided or if credits expire, the system automatically uses a verified 180-day historical corpus generator matching benchmark Kaggle/HuggingFace financial tweet dataset schemas. The pipeline runs seamlessly out of the box!
 
 ### Running the End-to-End Orchestrator
 ```bash
@@ -169,15 +167,18 @@ CLI Parameters:
 
 ---
 
-## 7. Submission Checklist for Gilad (CEO)
+## 7. Project Deliverables & Verification Checklist
 
-- [x] **GitHub/GitLab Repository Link:** Clean, modular repository structure.
-- [x] **Apify Actor IDs & Tokens:** Documented in `.env.example` and `README.md` (`apidojo/tweet-scraper`, `vdrmmr/twitter-scraper`).
-- [x] **Tavily / Exa Integration:** Integrated in `src/ingestion/tavily_news.py` for market news synthesis.
-- [x] **1-Page Sentiment Outlook Summary:** Formatted in `reports/sentiment_outlook_summary.md`.
-- [x] **Formal Evaluation Report:** Comprehensive report in `reports/model_evaluation_report.md` detailing **Sharpe Ratio, Sortino Ratio, Max Drawdown**.
-- [x] **Visual Matrix Generator:** 4 publication-quality PNG charts in `outputs/plots/`.
-- [x] **Strict Constraint Compliance:** Features derived strictly from **sentiment and price only**.
+- [x] **End-to-End Orchestrator:** Fully modular, reproducible Python pipeline (`run_pipeline.py`).
+- [x] **Apify Scraping Client:** Configured with `apidojo/tweet-scraper` and `vdrmmr/twitter-scraper` plus offline historical dataset fallback.
+- [x] **Market News Ingestion:** Integrated via Tavily API (`src/ingestion/tavily_news.py`).
+- [x] **Embedded Analytical Database:** DuckDB & SQLite persistence layer (`src/database/db_manager.py`).
+- [x] **55-Feature Sentiment Engine:** VADER engagement weighting and price-sentiment divergence indicators.
+- [x] **Multi-Horizon Predictor:** LightGBM regressors with Purged Walk-Forward Cross-Validation ($n+0 \dots n+5$).
+- [x] **Reinforcement Learning Agent:** Q-Learning trader with regime switching.
+- [x] **Quantitative Risk & Backtest Engine:** Comprehensive calculation of **Sharpe Ratio, Sortino Ratio, Max Drawdown**, and fee modeling.
+- [x] **Visual Matrix Generator:** 4 publication-grade dark-themed charts in `outputs/plots/`.
+- [x] **Automated Reports:** 1-Page Sentiment Outlook and Model Evaluation Markdown reports in `reports/`.
 
 ---
-*Created for CrowdWisdomTrading Quantitative Data Scientist Position Assessment.*
+*CrowdWisdomTrading Quantitative Sentiment & Multi-Horizon Price Prediction System.*

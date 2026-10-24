@@ -1,10 +1,9 @@
-# Quantitative Assessment Report: X Sentiment & Price Multi-Horizon Prediction
+# Quantitative Model Evaluation Report: X Sentiment & Price Multi-Horizon Prediction
 
-**Candidate:** Quantitative Data Scientist Applicant  
-**Company:** CrowdWisdomTrading  
+**Project:** CrowdWisdomTrading Quantitative Pipeline  
 **Target Asset:** BTC-USD (180-Day Hourly Horizon)  
 **Evaluation Scope:** Out-of-Sample Walk-Forward Validation ($n+0$ to $n+5$)  
-**Reviewer:** Gilad, CEO — CrowdWisdomTrading  
+**Constraint:** Strict X (Twitter) Sentiment & Price Features Only  
 
 ---
 
@@ -99,7 +98,7 @@ cp .env.example .env
 - **Primary Actor:** `apidojo/tweet-scraper`
 - **Alternative Actors Supported:** `vdrmmr/twitter-scraper`, `quacker/twitter-scraper`
 - **Tavily News API:** Search depth: `advanced`, topic: `news`
-- **Offline / Sandbox Mode:** Verified historical generator matching Kaggle/HuggingFace dataset schemas (from Gilad's doc) runs automatically if API credits are zero.
+- **Offline / Sandbox Mode:** Verified historical generator matching benchmark Kaggle/HuggingFace financial tweet dataset schemas runs automatically if API credits are zero.
 
 ```bash
 # 4. Execute End-to-End Orchestrator
@@ -107,4 +106,4 @@ python run_pipeline.py --asset BTC-USD --lookback 180 --timeframe 1h
 ```
 
 ---
-*Submitted for the Quantitative Data Scientist Position Assessment at CrowdWisdomTrading.*
+*CrowdWisdomTrading Quantitative Multi-Horizon Prediction & Risk Analysis Report.*

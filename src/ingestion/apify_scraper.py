@@ -2,7 +2,7 @@
 Apify-based X (Twitter) Scraper Client for CrowdWisdomTrading Quant System.
 Interacts with Apify Actor (e.g., apidojo/tweet-scraper) to extract posts, engagement,
 author follower counts, and timestamps aligned to UTC.
-Includes verified historical generator/cache loader matching Gilad's Kaggle/HuggingFace dataset specs.
+Includes verified historical generator/cache loader matching benchmark Kaggle/HuggingFace financial tweet dataset specs.
 """
 
 import datetime
