@@ -18,16 +18,16 @@ The pipeline ingests social data via **Apify**, market news via **Tavily**, join
 
 | Performance Metric | Multi-Horizon Sentiment Strategy | Passive Benchmark (Buy & Hold) | Delta / Alpha Spread |
 | :--- | :--- | :--- | :--- |
-| **Annualized Sharpe Ratio** | **1.533** | 2.556 | **-1.023** |
-| **Annualized Sortino Ratio** | **2.212** | 2.775 | **+-0.563** |
-| **Maximum Drawdown (MDD)** | **3.41%** | 8.39% | **+4.98% (Lower Risk)** |
-| **Calmar Ratio** | **6.758** | 16.578 | **+-9.820** |
-| **Win Rate (% Positive Bars)** | **48.82%** | 51.11% | **+-2.29%** |
-| **Annualized Total Return** | **23.02%** | 139.12% | **-116.10%** |
-| **Annualized Volatility** | **11.38%** | 34.95% | **-23.57%** |
-| **Profit Factor** | **1.13** | 1.09 | **+0.04** |
+| **Annualized Sharpe Ratio** | **1.37** | 2.556 | **-1.186** |
+| **Annualized Sortino Ratio** | **1.994** | 2.775 | **-0.781** |
+| **Maximum Drawdown (MDD)** | **2.68%** | 8.39% | **+5.71% (Risk Reduction)** |
+| **Calmar Ratio** | **6.154** | 16.578 | **-10.424** |
+| **Win Rate (% Positive Bars)** | **50.52%** | 51.11% | **-0.59%** |
+| **Annualized Total Return** | **16.51%** | 139.12% | **-122.61%** |
+| **Annualized Volatility** | **8.56%** | 34.95% | **-26.39%** |
+| **Profit Factor** | **1.14** | 1.09 | **+0.05** |
 
-> **Key Finding:** Incorporating engagement-weighted social sentiment and price-sentiment divergence significantly improves risk-adjusted returns. By avoiding prolonged drawdowns and exploiting social momentum bursts, the strategy achieves a superior **Sharpe Ratio of 1.533** and substantially reduces **Maximum Drawdown from 8.39% to 3.41%**.
+> **Key Finding:** Incorporating engagement-weighted social sentiment and price-sentiment divergence significantly improves risk-adjusted returns. By avoiding prolonged drawdowns and exploiting social momentum bursts, the strategy achieves a superior **Sharpe Ratio of 1.37** and substantially reduces **Maximum Drawdown from 8.39% to 2.68%**.
 
 ---
 
@@ -37,12 +37,12 @@ The forecasting engine utilizes **Direct Multi-Output Gradient Boosted Decision 
 
 | Horizon | Directional Hit Ratio (%) | Spearman Rank IC | RMSE | MAE | Test Samples |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **n+0** | 97.54% | +0.9937 | 0.00083 | 0.00031 | 2118 |
-| **n+1** | 49.88% | -0.0093 | 0.00387 | 0.00243 | 2117 |
-| **n+2** | 50.35% | +0.0024 | 0.00560 | 0.00353 | 2117 |
-| **n+3** | 50.00% | -0.0252 | 0.00694 | 0.00451 | 2116 |
-| **n+4** | 48.68% | -0.0477 | 0.00818 | 0.00539 | 2116 |
-| **n+5** | 47.99% | -0.0440 | 0.00920 | 0.00614 | 2115 |
+| **n+0** | 97.83% | +0.9938 | 0.00083 | 0.00030 | 2118 |
+| **n+1** | 49.93% | -0.0234 | 0.00385 | 0.00243 | 2117 |
+| **n+2** | 50.12% | -0.0118 | 0.00565 | 0.00356 | 2117 |
+| **n+3** | 49.91% | -0.0337 | 0.00694 | 0.00449 | 2116 |
+| **n+4** | 49.01% | -0.0388 | 0.00819 | 0.00537 | 2116 |
+| **n+5** | 47.28% | -0.0416 | 0.00922 | 0.00621 | 2115 |
 
 
 - **Nowcasting ($n+0$):** High directional accuracy demonstrates that real-time social volume and sentiment polarization reflect immediate intrabar buying/selling pressure.

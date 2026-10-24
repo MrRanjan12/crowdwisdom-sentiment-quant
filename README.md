@@ -129,7 +129,7 @@ All charts are generated in publication-grade institutional dark themes and save
 ### Installation
 ```bash
 # 1. Clone repository
-git clone https://github.com/<your-username>/crowdwisdom-sentiment-quant.git
+git clone https://github.com/MrRanjan12/crowdwisdom-sentiment-quant.git
 cd crowdwisdom-sentiment-quant
 
 # 2. Install dependencies
