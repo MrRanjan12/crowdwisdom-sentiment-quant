@@ -10,8 +10,15 @@ import uuid
 import datetime
 from datetime import timezone
 from typing import List, Dict, Any, Optional
+import numpy as np
 import pandas as pd
+from dotenv import load_dotenv
 from loguru import logger
+
+try:
+    from apify_client import ApifyClient
+except ImportError:
+    ApifyClient = None
 
 class ApifyTwitterScraper:
     def __init__(
@@ -39,10 +46,9 @@ class ApifyTwitterScraper:
             queries = ["$BTC", "#BTC", "Bitcoin"] if "BTC" in self.asset_symbol.upper() else [f"${self.asset_symbol}", self.asset_symbol]
 
         # Check if live Apify token is available
-        if self.token and self.token != "your_apify_token_here":
+        if self.token and self.token != "your_apify_token_here" and ApifyClient is not None:
             try:
                 logger.info(f"Connecting to Apify Actor '{self.actor_id}' using API token...")
-                from apify_client import ApifyClient
                 client = ApifyClient(self.token)
                 
                 # Format dates
@@ -58,12 +64,17 @@ class ApifyTwitterScraper:
                     "sort": "Top"
                 }
                 logger.info(f"Triggering Apify scraper for query: {search_query} (max={self.max_posts})")
-                run = client.actor(self.actor_id).call(run_input=run_input, memory_mbytes=1024, timeout_secs=180)
+                actor = client.actor(self.actor_id)
+                run = actor.call(run_input=run_input, memory_mbytes=1024, timeout_secs=180)
                 
-                dataset_items = client.dataset(run["defaultDatasetId"]).list_items().items
-                if dataset_items:
-                    logger.info(f"Successfully scraped {len(dataset_items)} posts via Apify Actor.")
-                    return self._normalize_apify_dataset(dataset_items)
+                if run and isinstance(run, dict):
+                    dataset_id = run.get("defaultDatasetId")
+                    if dataset_id:
+                        dataset = client.dataset(dataset_id).list_items()
+                        dataset_items = getattr(dataset, "items", []) or []
+                        if dataset_items:
+                            logger.info(f"Successfully scraped {len(dataset_items)} posts via Apify Actor.")
+                            return self._normalize_apify_dataset(dataset_items)
             except Exception as e:
                 logger.warning(f"Apify Actor execution failed or credits exhausted: {e}. Falling back to historical dataset engine.")
 
@@ -114,7 +125,6 @@ class ApifyTwitterScraper:
         - Burstiness around market volatility events
         - Realistic bullish, bearish, and neutral crypto market vocabulary
         """
-        import numpy as np
         num_hours = self.lookback_days * 24
         end_time = datetime.datetime.now(timezone.utc).replace(minute=0, second=0, microsecond=0)
         start_time = end_time - datetime.timedelta(hours=num_hours)
@@ -214,7 +224,6 @@ class ApifyTwitterScraper:
 
 
 if __name__ == "__main__":
-    from dotenv import load_dotenv
     load_dotenv()
 
     print("\n" + "=" * 70)
