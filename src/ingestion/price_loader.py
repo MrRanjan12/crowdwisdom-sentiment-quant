@@ -5,11 +5,11 @@ Uses yfinance with automatic fallback to Binance Public REST API for crypto asse
 """
 
 import datetime
-from datetime import timezone
-from typing import Optional
+
 import pandas as pd
 import requests
 from loguru import logger
+
 
 class PriceLoader:
     def __init__(self, asset_symbol: str = "BTC-USD", timeframe: str = "1h", lookback_days: int = 180):
@@ -29,7 +29,7 @@ class PriceLoader:
         # Attempt 1: yfinance
         try:
             import yfinance as yf
-            end_time = datetime.datetime.now(timezone.utc)
+            end_time = datetime.datetime.now(datetime.UTC)
             start_time = end_time - datetime.timedelta(days=self.lookback_days)
             
             # Note: yfinance limits 1h data to ~730 days
@@ -53,7 +53,7 @@ class PriceLoader:
                 df = df[["timestamp_utc", "asset_symbol", "open", "high", "low", "close", "volume"]]
                 logger.info(f"Successfully loaded {len(df)} price bars via yfinance.")
                 return df
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning(f"yfinance failed or returned empty: {e}. Trying fallback data provider...")
 
         # Attempt 2: Binance Public API (for Crypto such as BTC-USD / BTCUSDT)
@@ -63,7 +63,7 @@ class PriceLoader:
                 if df is not None and not df.empty:
                     logger.info(f"Successfully loaded {len(df)} price bars via Binance Public API.")
                     return df
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.warning(f"Binance API fallback failed: {e}")
 
         # Attempt 3: Realistic Geometric Brownian Motion with Jump Diffusion (Self-contained offline fallback)
@@ -74,7 +74,7 @@ class PriceLoader:
         """Fetches up to 180 days of hourly klines from Binance public endpoints."""
         url = "https://api.binance.com/api/v3/klines"
         total_hours = days * 24 if interval == "1h" else days
-        end_time_ms = int(datetime.datetime.now(timezone.utc).timestamp() * 1000)
+        end_time_ms = int(datetime.datetime.now(datetime.UTC).timestamp() * 1000)
         start_time_ms = end_time_ms - (days * 86400 * 1000)
 
         all_bars = []
@@ -119,7 +119,7 @@ class PriceLoader:
         """Generates realistic 180-day OHLCV data using jump diffusion if external APIs are unreachable."""
         import numpy as np
         num_bars = self.lookback_days * 24 if self.timeframe == "1h" else self.lookback_days
-        end_time = datetime.datetime.now(timezone.utc).replace(minute=0, second=0, microsecond=0)
+        end_time = datetime.datetime.now(datetime.UTC).replace(minute=0, second=0, microsecond=0)
         start_time = end_time - datetime.timedelta(hours=num_bars if self.timeframe == "1h" else 0, days=0 if self.timeframe == "1h" else num_bars)
         
         freq = "1h" if self.timeframe == "1h" else "1D"

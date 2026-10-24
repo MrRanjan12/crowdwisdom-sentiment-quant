@@ -4,30 +4,34 @@ Uses LightGBM / Gradient Boosting Regressors trained strictly on Sentiment and P
 Executes Purged Walk-Forward Cross-Validation to generate out-of-sample forecasts.
 """
 
-from typing import Dict, List, Tuple, Any
+from typing import Any
+
 import numpy as np
 import pandas as pd
-from scipy.stats import spearmanr
-from sklearn.metrics import mean_squared_error, mean_absolute_error
 from loguru import logger
+from scipy.stats import spearmanr
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 from .walk_forward import PurgedWalkForwardCV
+
 
 class MultiHorizonForecaster:
     def __init__(
         self,
-        horizons: List[int] = [0, 1, 2, 3, 4, 5],
+        horizons: list[int] | None = None,
         n_splits: int = 5,
         embargo_bars: int = 6
     ):
+        if horizons is None:
+            horizons = [0, 1, 2, 3, 4, 5]
         self.horizons = horizons
         self.n_splits = n_splits
         self.embargo_bars = embargo_bars
-        self.models: Dict[int, Any] = {}
-        self.feature_names: List[str] = []
-        self.feature_importances: Dict[int, pd.Series] = {}
+        self.models: dict[int, Any] = {}
+        self.feature_names: list[str] = []
+        self.feature_importances: dict[int, pd.Series] = {}
 
-    def _get_feature_columns(self, df: pd.DataFrame) -> List[str]:
+    def _get_feature_columns(self, df: pd.DataFrame) -> list[str]:
         """Filters strictly sentiment and price features."""
         exclude_cols = {
             "timestamp_utc", "asset_symbol", "bar_timestamp", "open", "high", "low", "close", "volume",
@@ -53,7 +57,7 @@ class MultiHorizonForecaster:
                 random_state=42,
                 verbose=-1
             )
-        except Exception:
+        except Exception:  # noqa: BLE001
             from sklearn.ensemble import HistGradientBoostingRegressor
             return HistGradientBoostingRegressor(
                 max_iter=100,
@@ -62,7 +66,7 @@ class MultiHorizonForecaster:
                 random_state=42
             )
 
-    def train_walk_forward(self, df_features: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    def train_walk_forward(self, df_features: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]]:
         """
         Runs Walk-Forward Validation across all prediction horizons (n+0 to n+5).
         Returns out-of-sample predictions DataFrame and comprehensive evaluation metrics.

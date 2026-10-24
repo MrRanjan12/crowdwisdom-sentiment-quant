@@ -5,11 +5,11 @@ author follower counts, and timestamps aligned to UTC.
 Includes verified historical generator/cache loader matching Gilad's Kaggle/HuggingFace dataset specs.
 """
 
+import datetime
 import os
 import uuid
-import datetime
-from datetime import timezone
-from typing import List, Dict, Any, Optional
+from typing import Any
+
 import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
@@ -23,7 +23,7 @@ except ImportError:
 class ApifyTwitterScraper:
     def __init__(
         self,
-        token: Optional[str] = None,
+        token: str | None = None,
         actor_id: str = "apidojo/tweet-scraper",
         asset_symbol: str = "BTC-USD",
         lookback_days: int = 180,
@@ -35,7 +35,7 @@ class ApifyTwitterScraper:
         self.lookback_days = lookback_days
         self.max_posts = max_posts
 
-    def scrape_posts(self, queries: Optional[List[str]] = None) -> pd.DataFrame:
+    def scrape_posts(self, queries: list[str] | None = None) -> pd.DataFrame:
         """
         Scrapes or loads X posts matching cashtags and keywords.
         Returns a DataFrame with columns:
@@ -52,7 +52,7 @@ class ApifyTwitterScraper:
                 client = ApifyClient(self.token)
                 
                 # Format dates
-                end_dt = datetime.datetime.now(timezone.utc)
+                end_dt = datetime.datetime.now(datetime.UTC)
                 start_dt = end_dt - datetime.timedelta(days=self.lookback_days)
                 
                 # Run actor
@@ -65,7 +65,7 @@ class ApifyTwitterScraper:
                 }
                 logger.info(f"Triggering Apify scraper for query: {search_query} (max={self.max_posts})")
                 actor = client.actor(self.actor_id)
-                run = actor.call(run_input=run_input, memory_mbytes=1024, timeout_secs=180)
+                run = actor.call(run_input=run_input, memory_mbytes=1024, run_timeout=datetime.timedelta(seconds=180))
                 
                 if run and isinstance(run, dict):
                     dataset_id = run.get("defaultDatasetId")
@@ -75,19 +75,19 @@ class ApifyTwitterScraper:
                         if dataset_items:
                             logger.info(f"Successfully scraped {len(dataset_items)} posts via Apify Actor.")
                             return self._normalize_apify_dataset(dataset_items)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.warning(f"Apify Actor execution failed or credits exhausted: {e}. Falling back to historical dataset engine.")
 
         # Fallback: High-Fidelity Historical Twitter Corpus aligned to 180-day price path
         logger.info("Using 180-day verified historical X (Twitter) corpus generator matching Kaggle/HuggingFace schemas.")
         return self._generate_historical_tweet_corpus()
 
-    def _normalize_apify_dataset(self, items: List[Dict[str, Any]]) -> pd.DataFrame:
+    def _normalize_apify_dataset(self, items: list[dict[str, Any]]) -> pd.DataFrame:
         """Standardizes Apify actor JSON output to uniform schema."""
         records = []
         for item in items:
             t_id = str(item.get("id") or item.get("id_str") or uuid.uuid4().hex[:12])
-            created_at = item.get("createdAt") or item.get("created_at") or datetime.datetime.now(timezone.utc).isoformat()
+            created_at = item.get("createdAt") or item.get("created_at") or datetime.datetime.now(datetime.UTC).isoformat()
             ts_utc = pd.to_datetime(created_at, utc=True)
             
             author = item.get("author", {}) if isinstance(item.get("author"), dict) else {}
@@ -126,7 +126,7 @@ class ApifyTwitterScraper:
         - Realistic bullish, bearish, and neutral crypto market vocabulary
         """
         num_hours = self.lookback_days * 24
-        end_time = datetime.datetime.now(timezone.utc).replace(minute=0, second=0, microsecond=0)
+        end_time = datetime.datetime.now(datetime.UTC).replace(minute=0, second=0, microsecond=0)
         start_time = end_time - datetime.timedelta(hours=num_hours)
         hourly_timestamps = pd.date_range(start=start_time, periods=num_hours, freq="1h", tz="UTC")
 
@@ -250,8 +250,10 @@ if __name__ == "__main__":
     print(f"Date Range (UTC):      {df_tweets['timestamp_utc'].min()}  -->  {df_tweets['timestamp_utc'].max()}")
     print("\nSample Extracted Posts (First 5 records):")
     print("-" * 70)
-    for idx, row in df_tweets.head(5).iterrows():
-        print(f"[{row['timestamp_utc'].strftime('%Y-%m-%d %H:%M')}] @{row['author_username']} ({row['author_followers']:,} followers):")
+    for _idx, row in df_tweets.head(5).iterrows():
+        ts_val = pd.to_datetime(row["timestamp_utc"])
+        ts_str = ts_val.strftime("%Y-%m-%d %H:%M") if hasattr(ts_val, "strftime") else str(ts_val)
+        print(f"[{ts_str}] @{row['author_username']} ({row['author_followers']:,} followers):")
         print(f"  \"{row['text']}\"")
         print(f"  Stats: {row['likes']:,} likes | {row['retweets']:,} retweets | {row['views']:,} views\n")
     print("=" * 70)

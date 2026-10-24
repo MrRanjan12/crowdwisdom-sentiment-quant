@@ -1,4 +1,4 @@
-from .sentiment_engine import SentimentEngine
 from .quant_features import QuantFeaturePipeline
+from .sentiment_engine import SentimentEngine
 
-__all__ = ["SentimentEngine", "QuantFeaturePipeline"]
+__all__ = ["QuantFeaturePipeline", "SentimentEngine"]

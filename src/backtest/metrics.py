@@ -3,15 +3,17 @@ Quantitative Performance & Risk Metrics for CrowdWisdomTrading.
 Calculates Annualized Sharpe, Sortino, Max Drawdown, Calmar, and Win Rate.
 """
 
-from typing import Dict, Any
+from typing import Any
+
 import numpy as np
 import pandas as pd
+
 
 def calculate_portfolio_metrics(
     returns: pd.Series,
     risk_free_rate: float = 0.04,
     periods_per_year: int = 8760  # 8760 for hourly crypto, 252 for daily
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Computes standard quantitative performance metrics from a returns series.
     """

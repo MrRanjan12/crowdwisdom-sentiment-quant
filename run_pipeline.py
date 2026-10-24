@@ -14,27 +14,28 @@ Executes:
 8. 1-Page Sentiment Outlook & Formal Evaluation Report
 """
 
+import argparse
 import os
 import sys
-import argparse
-import yaml
+
 from dotenv import load_dotenv
 from loguru import logger
 
 # Add project root to sys.path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+from src.backtest.engine import BacktestEngine
 from src.database.db_manager import DatabaseManager
-from src.ingestion.price_loader import PriceLoader
-from src.ingestion.apify_scraper import ApifyTwitterScraper
-from src.ingestion.tavily_news import TavilyNewsIngester
-from src.features.sentiment_engine import SentimentEngine
 from src.features.quant_features import QuantFeaturePipeline
+from src.features.sentiment_engine import SentimentEngine
+from src.ingestion.apify_scraper import ApifyTwitterScraper
+from src.ingestion.price_loader import PriceLoader
+from src.ingestion.tavily_news import TavilyNewsIngester
 from src.models.multi_horizon_forecaster import MultiHorizonForecaster
 from src.models.rl_agent import SentimentRLTrader
-from src.backtest.engine import BacktestEngine
-from src.visualization.matrix_generator import VisualMatrixGenerator
 from src.reports.report_generator import QuantReportGenerator
+from src.visualization.matrix_generator import VisualMatrixGenerator
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="CrowdWisdomTrading Quant Sentiment Pipeline")
@@ -164,7 +165,7 @@ def main():
     logger.info("-" * 75)
     logger.info(f"Evaluation Report:         {eval_report_path}")
     logger.info(f"1-Page Sentiment Outlook:  {outlook_path}")
-    logger.info(f"Visual Matrix Plots:       outputs/plots/")
+    logger.info("Visual Matrix Plots:       outputs/plots/")
     logger.info(f"Embedded Database:         {db_path}")
     logger.info("=" * 75)
 

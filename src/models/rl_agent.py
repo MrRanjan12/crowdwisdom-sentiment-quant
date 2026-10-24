@@ -4,10 +4,12 @@ Learns dynamic asset allocation policy (Long / Flat / Short) directly from
 social sentiment states, momentum, and price signals using Q-Learning.
 """
 
-from typing import Tuple, Dict, Any
+from typing import Any
+
 import numpy as np
 import pandas as pd
 from loguru import logger
+
 
 class SentimentRLTrader:
     def __init__(
@@ -21,11 +23,11 @@ class SentimentRLTrader:
         self.gamma = gamma
         self.epsilon = epsilon
         self.fee = fee_bps / 10000.0
-        self.q_table: Dict[Tuple, np.ndarray] = {}
+        self.q_table: dict[tuple, np.ndarray] = {}
         # Actions: 0 = Short (-1.0), 1 = Flat (0.0), 2 = Long (+1.0)
         self.action_map = {0: -1.0, 1: 0.0, 2: 1.0}
 
-    def _discretize_state(self, row: pd.Series) -> Tuple[int, int, int, int]:
+    def _discretize_state(self, row: pd.Series) -> tuple[int, int, int, int]:
         """
         Discretizes continuous sentiment and price features into a compact state tuple:
         (sentiment_regime, momentum_regime, rsi_regime, divergence_regime)
@@ -48,12 +50,12 @@ class SentimentRLTrader:
 
         return (s_state, sm_state, rsi_state, div_state)
 
-    def _get_q_values(self, state: Tuple) -> np.ndarray:
+    def _get_q_values(self, state: tuple) -> np.ndarray:
         if state not in self.q_table:
             self.q_table[state] = np.zeros(3)
         return self.q_table[state]
 
-    def train_policy(self, df_train: pd.DataFrame, episodes: int = 10) -> Dict[str, Any]:
+    def train_policy(self, df_train: pd.DataFrame, episodes: int = 10) -> dict[str, Any]:
         """Trains the Q-learning policy on the training partition."""
         logger.info(f"Training Sentiment RL Agent across {episodes} episodes ({len(df_train)} steps)...")
         

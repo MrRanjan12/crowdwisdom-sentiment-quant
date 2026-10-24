@@ -6,8 +6,9 @@ engagement-weighted sentiment, dispersion, and bull/bear ratios.
 
 import numpy as np
 import pandas as pd
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from loguru import logger
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
 
 class SentimentEngine:
     def __init__(self):

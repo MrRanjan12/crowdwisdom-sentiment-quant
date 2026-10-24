@@ -4,17 +4,17 @@ Fetches breaking financial and market news for the asset using tavily.com.
 Used to complement X social sentiment and produce the 1-page executive sentiment outlook.
 """
 
+import datetime
 import os
 import uuid
-import datetime
-from datetime import timezone
-from typing import List, Dict, Any, Optional
+from typing import Any
+
 import pandas as pd
-import requests
 from loguru import logger
 
+
 class TavilyNewsIngester:
-    def __init__(self, api_key: Optional[str] = None, asset_symbol: str = "BTC-USD"):
+    def __init__(self, api_key: str | None = None, asset_symbol: str = "BTC-USD"):
         self.api_key = api_key or os.getenv("TAVILY_API_KEY", "")
         self.asset_symbol = asset_symbol
 
@@ -43,13 +43,13 @@ class TavilyNewsIngester:
                 if results:
                     logger.info(f"Retrieved {len(results)} news articles from Tavily.")
                     return self._process_tavily_results(results)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.warning(f"Tavily API call failed or key invalid: {e}. Falling back to curated recent market news feed.")
 
         # High quality fallback news feed
         return self._generate_fallback_news()
 
-    def _process_tavily_results(self, results: List[Dict[str, Any]]) -> pd.DataFrame:
+    def _process_tavily_results(self, results: list[dict[str, Any]]) -> pd.DataFrame:
         records = []
         for r in results:
             title = r.get("title", "")
@@ -60,10 +60,10 @@ class TavilyNewsIngester:
             if published_date:
                 try:
                     ts = pd.to_datetime(published_date, utc=True)
-                except Exception:
-                    ts = datetime.datetime.now(timezone.utc)
+                except Exception:  # noqa: BLE001
+                    ts = datetime.datetime.now(datetime.UTC)
             else:
-                ts = datetime.datetime.now(timezone.utc)
+                ts = datetime.datetime.now(datetime.UTC)
 
             records.append({
                 "news_id": f"news_{uuid.uuid4().hex[:10]}",
@@ -79,7 +79,7 @@ class TavilyNewsIngester:
 
     def _generate_fallback_news(self) -> pd.DataFrame:
         """Curated high-impact recent news items for Bitcoin / TSLA macro outlook."""
-        now = datetime.datetime.now(timezone.utc)
+        now = datetime.datetime.now(datetime.UTC)
         asset_name = "Bitcoin" if "BTC" in self.asset_symbol.upper() else self.asset_symbol
         
         articles = [
@@ -91,18 +91,18 @@ class TavilyNewsIngester:
             },
             {
                 "title": f"Macro Volatility Compresses: {asset_name} Bollinger Bands Tighten to Historical Levels",
-                "content": f"On-chain derivatives metrics show options implied volatility collapsing to quarterly lows, historically preceding a significant directional volatility expansion.",
+                "content": "On-chain derivatives metrics show options implied volatility collapsing to quarterly lows, historically preceding a significant directional volatility expansion.",
                 "source": "CoinDesk Research",
                 "url": "https://coindesk.com/markets/volatility-squeeze"
             },
             {
-                "title": f"Federal Reserve Rate Outlook Sparks Renewed Risk-On Sentiment Across Assets",
+                "title": "Federal Reserve Rate Outlook Sparks Renewed Risk-On Sentiment Across Assets",
                 "content": f"Recent economic prints indicate cooling inflation pressures, boosting liquidity conditions across equities and cryptocurrency bellwethers including {asset_name}.",
                 "source": "Financial Times",
                 "url": "https://ft.com/markets/fed-liquidity"
             },
             {
-                "title": f"Whale Wallet Accumulation Accelerates Near Critical Key Support Zone",
+                "title": "Whale Wallet Accumulation Accelerates Near Critical Key Support Zone",
                 "content": f"Long-term holder supply reached an all-time high as exchange reserves of {asset_name} dropped to 5-year lows, signaling acute supply absorption.",
                 "source": "Glassnode On-Chain",
                 "url": "https://glassnode.com/insights/supply-drain"

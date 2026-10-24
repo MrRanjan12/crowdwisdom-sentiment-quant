@@ -3,9 +3,11 @@ Walk-Forward Time-Series Splitter with Purging and Embargo.
 Prevents information leakage across overlapping multi-horizon forward targets.
 """
 
-from typing import Generator, Tuple
+from collections.abc import Generator
+
 import numpy as np
 import pandas as pd
+
 
 class PurgedWalkForwardCV:
     """
@@ -18,7 +20,7 @@ class PurgedWalkForwardCV:
         self.min_train_ratio = min_train_ratio
         self.embargo_bars = embargo_bars
 
-    def split(self, df: pd.DataFrame) -> Generator[Tuple[np.ndarray, np.ndarray], None, None]:
+    def split(self, df: pd.DataFrame) -> Generator[tuple[np.ndarray, np.ndarray], None, None]:
         n_samples = len(df)
         min_train_size = int(n_samples * self.min_train_ratio)
         remaining_samples = n_samples - min_train_size

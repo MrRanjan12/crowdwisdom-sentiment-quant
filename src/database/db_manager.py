@@ -5,11 +5,12 @@ Handles DuckDB and SQLite storage, schema initialization, and transactional quer
 
 import os
 import sqlite3
-from typing import Optional, List, Dict, Any
+
 import pandas as pd
 from loguru import logger
 
 from .schema import SCHEMA_SQL
+
 
 class DatabaseManager:
     """

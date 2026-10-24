@@ -5,14 +5,17 @@ multi-horizon prediction matrices, equity curves, and risk profiles.
 """
 
 import os
-from typing import Dict, Any, List
+from typing import Any
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg") # Non-interactive headless backend
-import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
 from loguru import logger
+
 
 class VisualMatrixGenerator:
     def __init__(self, output_dir: str = "outputs/plots"):
@@ -33,9 +36,9 @@ class VisualMatrixGenerator:
     def generate_all_matrices(
         self,
         df_backtest: pd.DataFrame,
-        metrics_summary: Dict[str, Any],
-        feature_importances: Dict[int, pd.Series] = None
-    ) -> List[str]:
+        metrics_summary: dict[str, Any],
+        feature_importances: dict[int, pd.Series] | None = None
+    ) -> list[str]:
         """Runs the full visual matrix suite and saves PNG plots."""
         saved_plots = []
         p1 = self.plot_sentiment_price_matrix(df_backtest)
@@ -58,7 +61,7 @@ class VisualMatrixGenerator:
         file_path = os.path.join(self.output_dir, "sentiment_price_matrix.png")
         logger.info(f"Generating Sentiment vs Price Matrix Chart at {file_path}...")
 
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 9), sharex=True, gridspec_kw={"height_ratios": [2, 1]})
+        _fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 9), sharex=True, gridspec_kw={"height_ratios": [2, 1]})
 
         dates = df["timestamp_utc"]
 
@@ -74,7 +77,7 @@ class VisualMatrixGenerator:
         ax1.fill_between(dates, df["close"].min() * 0.98, df["close"].max() * 1.02,
                          where=(sent < -0.15), color="#FF1744", alpha=0.12, label="Extreme Bear Sentiment")
 
-        ax1.set_title(f"CrowdWisdomTrading: X (Twitter) Sentiment Dynamics vs Market Price Action", fontsize=14, fontweight="bold", pad=12)
+        ax1.set_title("CrowdWisdomTrading: X (Twitter) Sentiment Dynamics vs Market Price Action", fontsize=14, fontweight="bold", pad=12)
         ax1.set_ylabel("Price ($)", fontsize=11)
         ax1.legend(loc="upper left", framealpha=0.4)
         ax1.grid(True)
@@ -97,7 +100,7 @@ class VisualMatrixGenerator:
         plt.close()
         return file_path
 
-    def plot_multi_horizon_accuracy_matrix(self, metrics: Dict[str, Any]) -> str:
+    def plot_multi_horizon_accuracy_matrix(self, metrics: dict[str, Any]) -> str:
         """
         Visualizes prediction performance across horizons n+0 to n+5.
         Plots Directional Hit Ratio (%) and Information Coefficient (Rank IC).
@@ -117,7 +120,7 @@ class VisualMatrixGenerator:
                 rank_ics.append(val["rank_ic"])
                 rmses.append(val["rmse"] * 100) # Convert to bps / %
 
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.5))
+        _fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.5))
 
         # Subplot 1: Directional Accuracy (Hit Ratio)
         x = np.arange(len(horizons))
@@ -167,7 +170,7 @@ class VisualMatrixGenerator:
         file_path = os.path.join(self.output_dir, "backtest_performance_matrix.png")
         logger.info(f"Generating Backtest Performance Matrix at {file_path}...")
 
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 8.5), sharex=True, gridspec_kw={"height_ratios": [2.2, 1]})
+        _fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15, 8.5), sharex=True, gridspec_kw={"height_ratios": [2.2, 1]})
 
         dates = df["timestamp_utc"]
 
@@ -195,7 +198,7 @@ class VisualMatrixGenerator:
         plt.close()
         return file_path
 
-    def plot_feature_importance_matrix(self, feature_importances: Dict[int, pd.Series]) -> str:
+    def plot_feature_importance_matrix(self, feature_importances: dict[int, pd.Series]) -> str:
         """Visualizes top sentiment & price feature importances."""
         file_path = os.path.join(self.output_dir, "feature_importance_matrix.png")
         logger.info(f"Generating Feature Importance Matrix at {file_path}...")
@@ -204,7 +207,7 @@ class VisualMatrixGenerator:
         combined = pd.DataFrame(feature_importances).fillna(0.0).mean(axis=1).sort_values(ascending=True)
         top_features = combined.tail(15)
 
-        fig, ax = plt.subplots(figsize=(10, 6.5))
+        _fig, ax = plt.subplots(figsize=(10, 6.5))
         y_pos = np.arange(len(top_features))
 
         # Color sentiment features differently from price features

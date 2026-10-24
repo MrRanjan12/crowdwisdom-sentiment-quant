@@ -9,8 +9,11 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
+
 class QuantFeaturePipeline:
-    def __init__(self, asset_symbol: str = "BTC-USD", horizons: list = [0, 1, 2, 3, 4, 5]):
+    def __init__(self, asset_symbol: str = "BTC-USD", horizons: list | None = None):
+        if horizons is None:
+            horizons = [0, 1, 2, 3, 4, 5]
         self.asset_symbol = asset_symbol
         self.horizons = horizons
 

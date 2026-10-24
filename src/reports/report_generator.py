@@ -6,9 +6,11 @@ Generates:
 """
 
 import os
-from typing import Dict, Any, List
+from typing import Any
+
 import pandas as pd
 from loguru import logger
+
 
 class QuantReportGenerator:
     def __init__(self, output_dir: str = "reports"):
@@ -30,7 +32,7 @@ class QuantReportGenerator:
         last_row = df_features.iloc[-1]
         close_price = last_row.get("close", 0.0)
         weighted_sent = last_row.get("engagement_weighted_sentiment", 0.0)
-        raw_sent = last_row.get("sentiment_score", 0.0)
+        last_row.get("sentiment_score", 0.0)
         dispersion = last_row.get("sentiment_dispersion", 0.0)
         momentum = last_row.get("sentiment_momentum", 0.0)
         post_count = int(last_row.get("post_count", 0))
@@ -108,8 +110,8 @@ The following macro headlines complement the real-time social sentiment data:
         self,
         asset_symbol: str,
         lookback_days: int,
-        metrics_summary: Dict[str, Any],
-        backtest_summary: Dict[str, Any],
+        metrics_summary: dict[str, Any],
+        backtest_summary: dict[str, Any],
         output_file: str = "reports/model_evaluation_report.md"
     ) -> str:
         """

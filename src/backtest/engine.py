@@ -4,12 +4,14 @@ Simulates execution of multi-horizon sentiment & price alpha strategies
 with realistic transaction costs, slippage, and portfolio attribution.
 """
 
-from typing import Dict, Any, Tuple
+from typing import Any
+
 import numpy as np
 import pandas as pd
 from loguru import logger
 
 from .metrics import calculate_portfolio_metrics
+
 
 class BacktestEngine:
     def __init__(
@@ -27,9 +29,9 @@ class BacktestEngine:
     def run_multi_horizon_backtest(
         self,
         df_oos: pd.DataFrame,
-        horizon_weights: Dict[int, float] = None,
+        horizon_weights: dict[int, float] | None = None,
         threshold: float = 0.0005
-    ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    ) -> tuple[pd.DataFrame, dict[str, Any]]:
         """
         Backtests strategy driven by multi-horizon (n+0 to n+5) forecasts.
         """
@@ -74,9 +76,8 @@ class BacktestEngine:
             elif curr_pos > 0.0:
                 if a < exit_thresh:
                     curr_pos = 0.0
-            elif curr_pos < 0.0:
-                if a > -exit_thresh:
-                    curr_pos = 0.0
+            elif curr_pos < 0.0 and a > -exit_thresh:
+                curr_pos = 0.0
 
             positions[i] = curr_pos
 
