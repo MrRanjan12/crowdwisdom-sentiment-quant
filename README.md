@@ -5,7 +5,7 @@
 [![Database: DuckDB](https://img.shields.io/badge/DuckDB-Embedded%20OLAP-yellow.svg)](https://duckdb.org/)
 [![Model: LightGBM](https://img.shields.io/badge/Model-Multi--Horizon%20LightGBM-orange.svg)](https://lightgbm.readthedocs.io/)
 
-> **Quantitative Data Scientist Internship Assessment**  
+> **Quantitative Data Scientist Position Assessment**  
 > **Prepared for:** Gilad, CEO — CrowdWisdomTrading ([gilad@crowdwisdomtrading.com](mailto:gilad@crowdwisdomtrading.com))  
 > **Target Asset:** Bitcoin (`BTC-USD`) & Equities (`TSLA`) | **Horizon:** 180 Days Hourly Bars  
 > **Core Objective:** Multi-horizon forecasting ($n+0, n+1, n+2, n+3, n+4, n+5$) strictly using **X (Twitter) Sentiment and Price Only**, joined in a relational database, and validated through purged out-of-sample walk-forward cross-validation.
@@ -180,4 +180,4 @@ CLI Parameters:
 - [x] **Strict Constraint Compliance:** Features derived strictly from **sentiment and price only**.
 
 ---
-*Created for CrowdWisdomTrading Quantitative Data Scientist Internship Assessment.*
+*Created for CrowdWisdomTrading Quantitative Data Scientist Position Assessment.*

@@ -1,6 +1,6 @@
 # Quantitative Assessment Report: X Sentiment & Price Multi-Horizon Prediction
 
-**Candidate:** Quantitative Data Scientist Intern Applicant  
+**Candidate:** Quantitative Data Scientist Applicant  
 **Company:** CrowdWisdomTrading  
 **Target Asset:** BTC-USD (180-Day Hourly Horizon)  
 **Evaluation Scope:** Out-of-Sample Walk-Forward Validation ($n+0$ to $n+5$)  
@@ -107,4 +107,4 @@ python run_pipeline.py --asset BTC-USD --lookback 180 --timeframe 1h
 ```
 
 ---
-*Submitted for the Quantitative Data Scientist Internship Assessment at CrowdWisdomTrading.*
+*Submitted for the Quantitative Data Scientist Position Assessment at CrowdWisdomTrading.*

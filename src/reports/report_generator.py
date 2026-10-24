@@ -97,7 +97,7 @@ The following macro headlines complement the real-time social sentiment data:
 - **Key Invalidation Level:** A drop in social engagement below the 24h baseline or a sharp reversal in sentiment momentum (delta_S < -0.05) will invalidate this outlook.
 
 ---
-*Confidential — Prepared for CrowdWisdomTrading Quant Team by Intern Candidate.*
+*Confidential — Prepared for CrowdWisdomTrading Quant Team by Quantitative Candidate.*
 """
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(content)
@@ -113,7 +113,7 @@ The following macro headlines complement the real-time social sentiment data:
         output_file: str = "reports/model_evaluation_report.md"
     ) -> str:
         """
-        Generates the formal Internship Assessment Evaluation Report
+        Generates the formal Quantitative Position Assessment Evaluation Report
         detailing model performance metrics (Sharpe, Sortino, Max Drawdown).
         """
         logger.info(f"Generating Formal Model Evaluation Report at {output_file}...")
@@ -135,7 +135,7 @@ The following macro headlines complement the real-time social sentiment data:
 
         content = f"""# Quantitative Assessment Report: X Sentiment & Price Multi-Horizon Prediction
 
-**Candidate:** Quantitative Data Scientist Intern Applicant  
+**Candidate:** Quantitative Data Scientist Applicant  
 **Company:** CrowdWisdomTrading  
 **Target Asset:** {asset_symbol} (180-Day Hourly Horizon)  
 **Evaluation Scope:** Out-of-Sample Walk-Forward Validation ($n+0$ to $n+5$)  
@@ -236,7 +236,7 @@ python run_pipeline.py --asset BTC-USD --lookback 180 --timeframe 1h
 ```
 
 ---
-*Submitted for the Quantitative Data Scientist Internship Assessment at CrowdWisdomTrading.*
+*Submitted for the Quantitative Data Scientist Position Assessment at CrowdWisdomTrading.*
 """
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(content)

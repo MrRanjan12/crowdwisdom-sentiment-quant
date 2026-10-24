@@ -38,4 +38,4 @@ Social consensus on X is firmly bullish, backed by heavy engagement from large a
 - **Key Invalidation Level:** A drop in social engagement below the 24h baseline or a sharp reversal in sentiment momentum (delta_S < -0.05) will invalidate this outlook.
 
 ---
-*Confidential — Prepared for CrowdWisdomTrading Quant Team by Intern Candidate.*
+*Confidential — Prepared for CrowdWisdomTrading Quant Team by Quantitative Candidate.*
