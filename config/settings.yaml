@@ -1,0 +1,60 @@
+# CrowdWisdomTrading Quant Model Configuration
+
+asset:
+  symbol: "BTC-USD"
+  cashtags: ["$BTC", "#BTC", "Bitcoin", "BTCUSD"]
+  fallback_asset: "TSLA"
+  lookback_days: 180
+  timeframe: "1h"       # '1h' (recommended) or '1d'
+  timezone: "UTC"
+
+prediction:
+  horizons: [0, 1, 2, 3, 4, 5]   # n+0 to n+5 forward bars
+  target_type: "log_returns"      # 'log_returns' or 'simple_returns'
+  direction_threshold: 0.001     # 10 bps threshold for classification / deadband
+
+apify:
+  actor_id: "apidojo/tweet-scraper"   # Top rated Apify actor for X/Twitter
+  alternative_actors:
+    - "vdrmmr/twitter-scraper"
+    - "quacker/twitter-scraper"
+  max_posts_per_query: 5000
+  tweet_language: "en"
+
+tavily:
+  topic: "news"
+  days_back: 7
+  max_results: 15
+  search_depth: "advanced"
+
+feature_engineering:
+  sentiment_windows: [3, 6, 12, 24, 72]      # Rolling window hours
+  price_windows: [3, 6, 12, 24, 72]
+  engagement_alpha: 0.1                      # View multiplier
+  engagement_beta: 2.0                       # Retweet multiplier
+  include_price_sentiment_divergence: true
+  include_sentiment_dispersion: true
+  include_sentiment_momentum: true
+
+walk_forward:
+  type: "expanding"             # 'expanding' or 'rolling'
+  n_splits: 5
+  min_train_size: 1000          # Min hourly bars for initial training window
+  embargo_bars: 6               # Purge/embargo to prevent overlap leakage across n+5
+
+backtest:
+  initial_capital: 100000.0     # $100,000 USD
+  transaction_fee_bps: 5.0      # 5 bps (0.05%) fee + slippage per trade
+  risk_free_rate: 0.04          # 4.0% annualized risk-free rate
+  rebalance_frequency: 1        # Every bar
+  allow_short: false
+  max_leverage: 1.0
+
+database:
+  db_type: "duckdb"             # 'duckdb' or 'sqlite'
+  path: "data/crowdwisdom.duckdb"
+
+reports:
+  visual_matrix_dir: "outputs/plots"
+  outlook_report_path: "reports/sentiment_outlook_summary.md"
+  evaluation_report_path: "reports/model_evaluation_report.md"
