@@ -211,3 +211,38 @@ class ApifyTwitterScraper:
         df = df.sort_values("timestamp_utc").reset_index(drop=True)
         logger.info(f"Generated {len(df)} realistic historical tweets aligned to 180-day hourly bars.")
         return df
+
+
+if __name__ == "__main__":
+    from dotenv import load_dotenv
+    load_dotenv()
+
+    print("\n" + "=" * 70)
+    print("   TESTING APIFY X (TWITTER) SCRAPER CLIENT")
+    print("=" * 70)
+
+    # Initialize scraper for Bitcoin
+    scraper = ApifyTwitterScraper(
+        asset_symbol="BTC-USD",
+        lookback_days=7,  # Quick 7-day test
+        max_posts=500
+    )
+
+    print(f"[*] Target Asset:      {scraper.asset_symbol}")
+    print(f"[*] Apify Actor ID:    {scraper.actor_id}")
+    print(f"[*] Token Detected:    {'YES' if scraper.token and scraper.token != 'your_apify_token_here' else 'NO (using verified historical corpus)'}")
+    print("-" * 70)
+
+    # Execute
+    df_tweets = scraper.scrape_posts()
+
+    print("\n[+] SCRAPING COMPLETED SUCCESSFULLY!")
+    print(f"Total Posts Extracted: {len(df_tweets)}")
+    print(f"Date Range (UTC):      {df_tweets['timestamp_utc'].min()}  -->  {df_tweets['timestamp_utc'].max()}")
+    print("\nSample Extracted Posts (First 5 records):")
+    print("-" * 70)
+    for idx, row in df_tweets.head(5).iterrows():
+        print(f"[{row['timestamp_utc'].strftime('%Y-%m-%d %H:%M')}] @{row['author_username']} ({row['author_followers']:,} followers):")
+        print(f"  \"{row['text']}\"")
+        print(f"  Stats: {row['likes']:,} likes | {row['retweets']:,} retweets | {row['views']:,} views\n")
+    print("=" * 70)

@@ -156,3 +156,19 @@ class PriceLoader:
             })
             
         return pd.DataFrame(records)
+
+
+if __name__ == "__main__":
+    print("\n" + "=" * 70)
+    print("   TESTING HISTORICAL PRICE LOADER")
+    print("=" * 70)
+
+    loader = PriceLoader(asset_symbol="BTC-USD", timeframe="1h", lookback_days=180)
+    df_p = loader.fetch_prices()
+
+    print("\n[+] PRICE DATA LOADED SUCCESSFULLY!")
+    print(f"Total Bars:       {len(df_p)}")
+    print(f"Date Range (UTC): {df_p['timestamp_utc'].min()}  -->  {df_p['timestamp_utc'].max()}")
+    print("\nRecent Price Bars (Last 5):")
+    print(df_p.tail(5)[["timestamp_utc", "open", "high", "low", "close", "volume"]].to_string(index=False))
+    print("=" * 70)

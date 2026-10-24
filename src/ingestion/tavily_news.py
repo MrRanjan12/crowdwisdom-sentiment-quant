@@ -123,3 +123,24 @@ class TavilyNewsIngester:
                 "sentiment_score": 0.0
             })
         return pd.DataFrame(records)
+
+
+if __name__ == "__main__":
+    from dotenv import load_dotenv
+    load_dotenv()
+
+    print("\n" + "=" * 70)
+    print("   TESTING TAVILY NEWS INGESTER")
+    print("=" * 70)
+
+    news_loader = TavilyNewsIngester(asset_symbol="BTC-USD")
+    df_n = news_loader.fetch_recent_news(max_results=5)
+
+    print("\n[+] NEWS ARTICLES INGESTED SUCCESSFULLY!")
+    print(f"Total Articles: {len(df_n)}")
+    print("\nHeadlines:")
+    print("-" * 70)
+    for idx, row in df_n.iterrows():
+        print(f"• {row['title']} ({row['source']})")
+        print(f"  {row['content'][:120]}...\n")
+    print("=" * 70)
